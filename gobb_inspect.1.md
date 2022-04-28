@@ -46,7 +46,7 @@ smb, show-movebacks
 m NUM, move NUM
 : execute the movement of the possible move NUM.
 
-mb, moveback NUM
+mb NUM, moveback NUM
 : execute the movement of the possible retrograde move NUM.
 
 ## History
@@ -57,7 +57,7 @@ The maximum size of the history table is 32.
 sh, show-history
 : show the history table.
 
-gh, goto-history NUM
+gh NUM, goto-history NUM
 : go to the position of the history NUM.
 
 n, next
