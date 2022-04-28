@@ -73,7 +73,8 @@ p, previous:
 
 exit
 : exit the program.
-: also typing `Ctrl-D` (END OF TRANSMISSION) exits the program.
+
+Sending EOF (`Ctrl-D` or `Ctrl-Z`) also exits the program.
 
 # NAMING THE SQUARES
 
@@ -143,7 +144,7 @@ Each position is marked with one of the following status codes.
 # NOTES
 
 `gobb_inspect` displays colored pieces using escape sequences.
-Note that Command Prompt and PowerShell support escape sequences, but they are disabled by default.
+On Windows, Command Prompt and PowerShell support escape sequences, but they are disabled by default.
 If you would like to make Command Prompt and PowerShell recognize escape sequences, set the registory
 
     HKEY_CURRENT_USER\Console\VirtualTerminalLevel

@@ -136,10 +136,9 @@ The program interactively accepts input from standard in and prints the result m
 to standard out.  Type `? Enter` to see help messages.  For details about `gobb_inspect`,
 refer to the document `gobb_inspect.1.md`.
 
-`gobb_inspect` displays colored pieces using escape sequences.  Note that Command
-Prompt and PowerShell support escape sequences, but they are disabled by default.
-If you would like to make Command Prompt and PowerShell recognize escape sequences,
-set the registory
+`gobb_inspect` displays colored pieces using escape sequences.  On Windows, Command Prompt
+and PowerShell support escape sequences, but they are disabled by default.  If you would
+like to make Command Prompt and PowerShell recognize escape sequences, set the registory
 
     HKEY_CURRENT_USER\Console\VirtualTerminalLevel
 
