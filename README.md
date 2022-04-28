@@ -129,7 +129,7 @@ recommended to use a terminal with a minimum width of 100, and a height of 48.
       26| Large , Out    -> SE    , position = 3573999685, remainingTurns = 12, Won [best]
     gobb_inspect>
 
-The text messages shows the initial position of the game, the possible moves and
+The text messages show the initial position of the game, the possible moves and
 a prompt `gobb_inspect>`.
 
 The program interactively accepts input from standard in and prints the result messages

@@ -148,7 +148,7 @@ If you would like to make Command Prompt and PowerShell recognize escape sequenc
 
     HKEY_CURRENT_USER\Console\VirtualTerminalLevel
 
-to 1 (REG_DWORD) and then execute a terminal.
+to 1 (REG_DWORD) and then execute a terminal program.
 
 # SEE ALSO
 
