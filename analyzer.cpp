@@ -288,8 +288,10 @@ bool Analyzer::analyze_generation(AnalysisStatistics& stats) noexcept {
         AnalysisStatus status = status_of_analysisData(data);
         if (status == AnalysisStatus::Lost || status == AnalysisStatus::LostStalemate) {
             Position pos(i);
-            if (analyze_move_backs_from_active_player_lost(stats, pos)) {
-                updated = true;
+            if (turn_of_analysisData(data) == 0u || analyze_unfixed_or_lost(stats, pos)) {
+                if (analyze_move_backs_from_active_player_lost(stats, pos)) {
+                    updated = true;
+                }
             }
         } else if (status == AnalysisStatus::Won) {
             Position pos(i);
@@ -298,7 +300,7 @@ bool Analyzer::analyze_generation(AnalysisStatistics& stats) noexcept {
             }
         } else if (status == AnalysisStatus::Unfixed) {
             Position pos(i);
-            if (analyze_unfixed(stats, pos)) {
+            if (analyze_unfixed_or_lost(stats, pos)) {
                 analyze_move_backs_from_active_player_lost(stats, pos);
                 updated = true;
             }
@@ -332,13 +334,15 @@ bool Analyzer::analyze_move_backs_from_active_player_lost(AnalysisStatistics& st
                 }
 
                 AnalysisData& dstData = analysisDataTable_[moveResult.position.minimize_id()];
-                if (status_of_analysisData(dstData) == AnalysisStatus::Unfixed) {
+                AnalysisStatus dstStatus = status_of_analysisData(dstData);
+
+                if (dstStatus == AnalysisStatus::Unfixed) {
                     dstData = to_analysisData(true, nextTurn, AnalysisStatus::Won);
                     stats.wonNums++;
                     updated = true;
-                } else if (status_of_analysisData(dstData) == AnalysisStatus::Won &&
+                } else if ((dstStatus == AnalysisStatus::Won || dstStatus == AnalysisStatus::WonStalemate) &&
                     turn_of_analysisData(dstData) > nextTurn) {
-                    dstData = set_turn_of_analysisData(dstData, nextTurn);
+                    dstData = to_analysisData(true, nextTurn, AnalysisStatus::Won);
                 }
             }
 
@@ -355,6 +359,14 @@ bool Analyzer::analyze_move_backs_from_active_player_won(AnalysisStatistics& sta
     static_cast<void>(stats);
     bool updated = false;
 
+    Turn turn = turn_of_analysisData(analysisDataTable_[pos.id()]);
+    Turn nextTurn;
+    if (turn == MaxTurn) {
+        nextTurn = turn;
+    } else {
+        nextTurn = turn + 1u;
+    }
+
     for (PieceId piece: InactivePlayerPieceIds) {
         LocationIdPair locPair = pos.locations_of_piece(piece);
 
@@ -367,8 +379,15 @@ bool Analyzer::analyze_move_backs_from_active_player_won(AnalysisStatistics& sta
                     continue;
                 }
 
-                AnalysisData& dstData = analysisDataTable_[moveResult.position.minimize_id()];
-                if (status_of_analysisData(dstData) == AnalysisStatus::Unfixed) {
+                PositionId minId = moveResult.position.minimize_id();
+                AnalysisData& dstData = analysisDataTable_[minId];
+                AnalysisStatus dstStatus = status_of_analysisData(dstData);
+
+                if (dstStatus == AnalysisStatus::Unfixed) {
+                    dstData = set_updateFlag_of_analysisData(dstData, true);
+                    updated = true;
+                } else if ((dstStatus == AnalysisStatus::Lost || dstStatus == AnalysisStatus::LostStalemate) &&
+                    turn_of_analysisData(dstData) > nextTurn) {
                     dstData = set_updateFlag_of_analysisData(dstData, true);
                     updated = true;
                 }
@@ -382,7 +401,7 @@ bool Analyzer::analyze_move_backs_from_active_player_won(AnalysisStatistics& sta
     return updated;
 }
 
-bool Analyzer::analyze_unfixed(AnalysisStatistics& stats, const Position& pos) noexcept {
+bool Analyzer::analyze_unfixed_or_lost(AnalysisStatistics& stats, const Position& pos) noexcept {
     Turn nextTurn = 0u;
 
     for (PieceId piece: ActivePlayerPieceIds) {
@@ -398,7 +417,9 @@ bool Analyzer::analyze_unfixed(AnalysisStatistics& stats, const Position& pos) n
                 }
 
                 AnalysisData& dstData = analysisDataTable_[moveResult.position.minimize_id()];
-                if (status_of_analysisData(dstData) != AnalysisStatus::Won) {
+                AnalysisStatus dstStatus = status_of_analysisData(dstData);
+
+                if (dstStatus != AnalysisStatus::Won && dstStatus != AnalysisStatus::WonStalemate) {
                     return false;
                 }
                 Turn turn = turn_of_analysisData(dstData);
@@ -414,9 +435,20 @@ bool Analyzer::analyze_unfixed(AnalysisStatistics& stats, const Position& pos) n
         }
     }
 
-    analysisDataTable_[pos.id()] = to_analysisData(false, nextTurn, AnalysisStatus::Lost);
-    stats.lostNums++;
-    return true;
+    bool updated = false;
+    AnalysisData& dstData = analysisDataTable_[pos.id()];
+    AnalysisStatus curStatus = status_of_analysisData(dstData);
+    Turn curTurn = turn_of_analysisData(dstData);
+
+    if (curStatus == AnalysisStatus::Unfixed) {
+        dstData = to_analysisData(false, nextTurn, AnalysisStatus::Lost);
+        updated = true;
+        stats.lostNums++;
+    } else if (curTurn > nextTurn) {
+        dstData = to_analysisData(false, nextTurn, AnalysisStatus::Lost);
+        updated = true;
+    }
+    return updated;
 }
 
 int Analyzer::move_nums(const Position& pos) const noexcept {

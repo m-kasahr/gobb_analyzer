@@ -101,13 +101,13 @@ recommended to use a terminal with a minimum width of 100, and a height of 48.
 
     possible moves:
        0| Small , Out    -> NW    , position = 2881474013, remainingTurns = 14, Won
-       1| Small , Out    -> N     , position = 2881474050, remainingTurns = 14, Won
+       1| Small , Out    -> N     , position = 2881474050, remainingTurns = 12, Won [best]
        2| Small , Out    -> NE    , position = 2881474087, remainingTurns = 14, Won
-       3| Small , Out    -> W     , position = 2881474124, remainingTurns = 14, Won
+       3| Small , Out    -> W     , position = 2881474124, remainingTurns = 12, Won [best]
        4| Small , Out    -> Center, position = 2881474161, remainingTurns = 14, Won
-       5| Small , Out    -> E     , position = 2881474198, remainingTurns = 14, Won
+       5| Small , Out    -> E     , position = 2881474198, remainingTurns = 12, Won [best]
        6| Small , Out    -> SW    , position = 2881474235, remainingTurns = 14, Won
-       7| Small , Out    -> S     , position = 2881474272, remainingTurns = 14, Won
+       7| Small , Out    -> S     , position = 2881474272, remainingTurns = 12, Won [best]
        8| Small , Out    -> SE    , position = 2881474309, remainingTurns = 14, Won
        9| Medium, Out    -> NW    , position = 2881539425, remainingTurns = 13, Lost
       10| Medium, Out    -> N     , position = 2881592076, remainingTurns = 11, Lost

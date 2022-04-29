@@ -623,16 +623,16 @@ private:
     bool analyze_move_backs_from_active_player_won(AnalysisStatistics& stats, const Position& pos) noexcept;
 
     ///
-    /// Try to update analysis status of a position marked with Unfixed.
+    /// Try to update analysis status of a position marked with Unfixed or Lost.
     ///
     /// @param   stats  statistics data of the current generation.
-    /// @param   pos    a position marked with Unfixed.
+    /// @param   pos    a position marked with Unfixed or Lost.
     /// @return  true if the analysis data table has been updated.
     ///
     /// If all the subsequent positions of the position P are marked with either Won or WonStalemate,
     /// we mark the position P as Lost.
     ///
-    bool analyze_unfixed(AnalysisStatistics& stats, const Position& pos) noexcept;
+    bool analyze_unfixed_or_lost(AnalysisStatistics& stats, const Position& pos) noexcept;
 
     ///
     /// Count possible movements at the position.
