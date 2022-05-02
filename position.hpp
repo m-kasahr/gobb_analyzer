@@ -45,9 +45,8 @@ namespace gobb_analyzer {
 /// 3. Get an index number M of the four medium pieces, same as the small pieces.
 /// 4. Get an index number L of the four large pieces, likewise.
 /// 5. Calcuate the value: P = (L * 1423 * 1423) + (M * 1423) + S.
-/// 6. If the player having the turn is Orange, the position ID is P.
-///    Otherwise, the position ID is P + PieceSetCombinationNums, where PieceSetCombinationNums is
-///    (1423 * 1423 * 1423) + (1423 * 1423) + 1423.
+/// 6. If the player having the turn is Orange, the position ID is P.  Otherwise, the position ID is
+///    P + PieceSetCombinationNums, where PieceSetCombinationNums is (1423 * 1423 * 1423).
 ///
 using PositionId = std::uint64_t;
 
